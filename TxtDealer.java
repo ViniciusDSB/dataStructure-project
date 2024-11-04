@@ -1,6 +1,6 @@
-package codego;
+package dataStrctureProject;
 
-//import the think to deal with the pdf read and convertion to txt
+//import Apache Tika to deal with the pdf read and convertion to txt
 
 
 public class TxtDealer {

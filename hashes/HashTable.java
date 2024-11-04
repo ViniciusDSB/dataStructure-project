@@ -1,17 +1,36 @@
-package hashing;
+package hashes;
 
 import java.util.LinkedList;
 
 public class HashTable <K, V>{
     
-    private LinkedList<HashEntry<K, V>>[] hashTable;
+    private LinkedList<HashEntry<K,V>>[] hashTable;
     private int size;
 
     public HashTable(int size){
-        hashTable = new LinkedList<HashEntry<K, V>>[size];
+        hashTable = new LinkedList[size];
         this.size = size;
     }
 
+    //code teacher told us to use, user must select one of them
+    public int hashDivisao (String texto , int M ) {
+        int soma = 0;
+            for ( char c : texto . toCharArray () ) {
+            soma += (int ) c ;
+        }
+
+        return soma % M ;
+    }
+    public int hashDJB2 ( String texto ) {
+        long hash = 5381;
+        for ( char c : texto.toCharArray ()){
+            hash = (( hash << 5) + hash ) + c; // hash * 33 + c
+        }
+
+        return (int)( hash % Integer.MAX_VALUE );
+    }
+
+    //made in class
     public int getPosition(int value){
         return value%size;
     }

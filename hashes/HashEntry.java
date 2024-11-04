@@ -1,4 +1,4 @@
-package hashing;
+package hashes;
 
 public class HashEntry<K, V> {
     

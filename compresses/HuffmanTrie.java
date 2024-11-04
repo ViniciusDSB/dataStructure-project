@@ -1,6 +1,8 @@
-package huffman;
+package compresses;
 
 import java.util.*;
+
+//we probably need to change the Map<> collection to our own hash system
 
 public class HuffmanTrie {
     

@@ -1,4 +1,4 @@
-package huffman;
+package compresses;
 
 //implementing the interface method for compargn objects
 //in this case we specify objects of the same type, TrieNode
