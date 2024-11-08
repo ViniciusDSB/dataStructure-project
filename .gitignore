@@ -1,2 +1,6 @@
-./articles/*
-./plainTxts/*
+theClasses/*
+./txts/*
+./pdfs/*
+
+/pyVenv/*
+!/pyVenv/pdftxt.py
