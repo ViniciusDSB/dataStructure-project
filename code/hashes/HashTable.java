@@ -1,30 +1,52 @@
 package hashes;
 
+//Raw usage exemple of hash table
+//HashTable<Integer, String> testHash = new HashTable<Integer, String>(10);
+//testHash.put(1, "Sheldon");
+//testHash.put(1, "Nome");
+//testHash.put(3, "Azingfa");
+//testHash.put(5, "Vinicius");
+//testHash.put(4, "Buarque");
+//testHash.put(1, "Luiza");
+//testHash.put(8, "Vinicius");
+//testHash.put(8, "Vinicius"); //Do not insert a same value into a same position
+//
+//testHash.printOut();
+//System.out.println(testHash.get(1));
+
 import java.util.LinkedList;
 
 public class HashTable <K, V>{
     
+    //We start creating a vector of linked lists (each position is a list)
+
     private LinkedList<HashEntry<K,V>>[] hashTable;
     private int size;
+    
+    private int hashingAlgorithm; //can be 0, 1 or 2
+    //0 - default, simplest, made in class, not very efficient
+    //1 - hasing by division
+    //2 - DBJ2 algorithm, that one is weird but the guy says it distirbutes the position very well
 
-    public HashTable(int size){
-        hashTable = new LinkedList[size];
+    public HashTable(int size, int hashingAlgorithm){
         this.size = size;
+        this.hashingAlgorithm = hashingAlgorithm;
+        hashTable = new LinkedList[size];
     }
 
     //code teacher told us to use, user must select one of them
     public int hashDivisao (String texto , int M ) {
         int soma = 0;
-            for ( char c : texto . toCharArray () ) {
-            soma += (int ) c ;
+            for ( char c : texto.toCharArray () ) {
+            soma += (int) c ;
         }
 
         return soma % M ;
     }
     public int hashDJB2 ( String texto ) {
         long hash = 5381;
-        for ( char c : texto.toCharArray ()){
-            hash = (( hash << 5) + hash ) + c; // hash * 33 + c
+        for ( char c : texto.toCharArray()){
+            hash = (( hash << 5 ) + hash) + c; // hash * 33 + c
         }
 
         return (int)( hash % Integer.MAX_VALUE );
@@ -41,7 +63,7 @@ public class HashTable <K, V>{
 
         if(key == null)
             return null;
-    
+        
         position = getPosition(Math.abs( key.hashCode() ));
         
         //Se a posição do hash não tem valores retorna um null
@@ -58,6 +80,7 @@ public class HashTable <K, V>{
         }
     }
 
+    
     public boolean put(K key, V value){
         int position;
         if(key == null)
@@ -96,7 +119,7 @@ public class HashTable <K, V>{
                 System.out.println("Empty position");
             else{
                 LinkedList<HashEntry<K, V>> currentList = hashTable[i];
-                for(int j = 0; j<currentList.size(); i++){
+                for(int j = 0; j<currentList.size(); j++){
                     System.out.println(currentList.get(j).toString() + " - ");
                 }
             }
