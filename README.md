@@ -15,9 +15,9 @@ If you have that you can start extracting the text from pdfs with Py Mu Pdf, if 
 `pip install pymupdf`
 By running
 `python(python_version) pyVenv pdftxt.py`
-Override (python_version) with your python version of course, or run it your way; maybe you'll need a oython virtual environment<br>
+Override (python_version) with your python version of course, or run it your way; maybe you'll need a python virtual environment<br>
 
-you can give a path to a folder with some pdfsm than takes the texts from them an produces another folder folder with the texts.
+you can give a path to a folder with some pdfs that takes the texts from them an produces another folder folder with the texts.
 
 Then you can run
 `javac -d theClasses code/Main.java code/compresses/*.java code/hashes/*.java`
