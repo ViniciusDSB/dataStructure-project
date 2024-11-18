@@ -1,4 +1,4 @@
-#We are making a project of data structures (teacher request)
+# We are making a project of data structures (teacher request)
 <h3> The project is not done yet, we got othe things to do than writing java code</h3>
 
 <p>
@@ -9,8 +9,8 @@ Then the user can serach for words and the system must tell witch files contains
 
 <p>After that we have to make a report with an analysis of the perfomance of the code</p>
 
-#Running:
-First of all make sure you have java an python installed<br>
+# Running the programs:
+First if all make sure you have java an python installed<br>
 If you have that you can start extracting the text from pdfs with Py Mu Pdf, if you dont have it just run
 `pip install pymupdf`
 By running
