@@ -1,7 +1,6 @@
 package compresses;
 
 import java.util.*;
-import hashes;
 
 //Raw usage exemple of huffmanTrie
 //String input = "abracadabra";
