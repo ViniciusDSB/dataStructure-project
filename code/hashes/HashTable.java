@@ -16,7 +16,7 @@ package hashes;
 
 import java.util.LinkedList;
 
-public class HashTable <K, V>{
+public class HashTable <K extends String, V>{
     
     //We start creating a vector of linked lists (each position is a list)
 
@@ -24,8 +24,8 @@ public class HashTable <K, V>{
     private int size;
     
     private int hashingAlgorithm; //can be 0, 1 or 2
-    //0 - default, simplest, made in class, not very efficient
-    //1 - hasing by division
+    //0 - Default, simplest, made in class, not very efficient
+    //1 - Hasing by division
     //2 - DBJ2 algorithm, that one is weird but the guy says it distirbutes the position very well
 
     public HashTable(int size, int hashingAlgorithm){
@@ -34,27 +34,41 @@ public class HashTable <K, V>{
         hashTable = new LinkedList[size];
     }
 
-    //code teacher told us to use, user must select one of them
-    public int hashDivisao (String texto , int M ) {
+    //Code teacher told us to use, user must select one of them//Made in class
+    public int getPosition(K key){
+        int position = 0;
+
+        //Similar to a codification, the hashCode() method is a java defautl method
+        //That associates a number to an object, as a way to identify it.
+        //It is used for comparing objects, exemple;
+        //In this case it is useful cuz we dont have to worry if the key is
+        //A string or an integer. it return an interger, positive or negative, thay why abs.
+        //The lisked list librady takes care of the linked list insertion :)
+
+        if(hashingAlgorithm == 0)
+            position = Math.abs( key.hashCode() );
+        if(hashingAlgorithm == 1)
+            position = hashDivisao(key);
+        if(hashingAlgorithm == 2)
+            position = hashDJB2(key);
+        
+        return position;
+    }
+    public int hashDivisao (K key){
         int soma = 0;
-            for ( char c : texto.toCharArray () ) {
+            for ( char c : key.toCharArray () ){
             soma += (int) c ;
         }
 
-        return soma % M ;
+        return soma % this.size;
     }
-    public int hashDJB2 ( String texto ) {
+    public int hashDJB2 (K key) {
         long hash = 5381;
-        for ( char c : texto.toCharArray()){
+        for ( char c : key.toCharArray()){
             hash = (( hash << 5 ) + hash) + c; // hash * 33 + c
         }
 
-        return (int)( hash % Integer.MAX_VALUE );
-    }
-
-    //made in class
-    public int getPosition(int value){
-        return value%size;
+        return (int)( hash % this.size );
     }
 
     public LinkedList<V> get(K key){
@@ -64,22 +78,22 @@ public class HashTable <K, V>{
         if(key == null)
             return null;
         
-        position = getPosition(Math.abs( key.hashCode() ));
+        position = getPosition(key);
         
         //Se a posição do hash não tem valores retorna um null
         if(hashTable[position] == null)
             return null;
         else{
             LinkedList<HashEntry<K, V>> currentList = hashTable[position];
+            
             for(HashEntry<K, V> currentEntry : currentList){
                 if(key.equals( currentEntry.key )){
                     valuesFound.add(currentEntry.value);
                 }
             }
-            return valuesFound; //caso não tenha encontrado a chave na lista
+            return valuesFound; //Caso não tenha encontrado a chave na lista
         }
     }
-
     
     public boolean put(K key, V value){
         int position;
@@ -91,14 +105,7 @@ public class HashTable <K, V>{
         if(currentValueForKey != null && currentValueForKey.contains(value))
             return false;
 
-        //similar to a codification, the hashCode() method it a java deefautl method
-        //that associates a number to an object, as a way to identify it.
-        //it is used for comparing objects, exemple;
-        //in this case it is useful cuz we dont have to worry if the key is
-        //a string or an integer. it return an interger, positive or negative, thay why abs.
-        //The lisked list librady takes care of the linked list insertion :)
-
-        position = getPosition(Math.abs( key.hashCode() ));
+        position = getPosition(key);
     
         LinkedList<HashEntry<K, V>> currentList = hashTable[position];
         if(currentList == null)
@@ -107,7 +114,7 @@ public class HashTable <K, V>{
         currentList.add(new HashEntry<K, V> (key, value)); //inserts the value
         hashTable[position] = currentList; //inserts the list on the positon
             
-        return true; //a success inserton!
+        return true; //A success inserton!
     }
     
     public void printOut(){
