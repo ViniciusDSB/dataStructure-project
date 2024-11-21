@@ -1,32 +1,19 @@
 package hashes;
 
-//Raw usage exemple of hash table
-//HashTable<Integer, String> testHash = new HashTable<Integer, String>(10);
-//testHash.put(1, "Sheldon");
-//testHash.put(1, "Nome");
-//testHash.put(3, "Azingfa");
-//testHash.put(5, "Vinicius");
-//testHash.put(4, "Buarque");
-//testHash.put(1, "Luiza");
-//testHash.put(8, "Vinicius");
-//testHash.put(8, "Vinicius"); //Do not insert a same value into a same position
-//
-//testHash.printOut();
-//System.out.println(testHash.get(1));
-
 import java.util.LinkedList;
 
-public class HashTable <K, V>{
+public class HashTable <K extends String, V>{
     
     //We start creating a vector of linked lists (each position is a list)
 
     private LinkedList<HashEntry<K,V>>[] hashTable;
     private int size;
     
-    private int hashingAlgorithm; //can be 0, 1 or 2
-    //0 - default, simplest, made in class, not very efficient
-    //1 - hasing by division
-    //2 - DBJ2 algorithm, that one is weird but the guy says it distirbutes the position very well
+    private int hashingAlgorithm;
+    //can be 0, 1 or 2
+    //0 - Default, simplest, made in class, not very efficient
+    //1 - Hasing by division
+    //2 - DBJ2 algorithm, that one is weird but the guy says it distirbutes the positions very well
 
     public HashTable(int size, int hashingAlgorithm){
         this.size = size;
@@ -34,80 +21,97 @@ public class HashTable <K, V>{
         hashTable = new LinkedList[size];
     }
 
-    //code teacher told us to use, user must select one of them
-    public int hashDivisao (String texto , int M ) {
-        int soma = 0;
-            for ( char c : texto.toCharArray () ) {
-            soma += (int) c ;
-        }
+    //To get the position it checks witch hashing algorithm we are using
+    public int getPosition(K Tag) throws Exception{
+        int position = 0;
 
-        return soma % M ;
+        try{
+            if(hashingAlgorithm == 0)
+                position = Math.abs( Tag.hashCode() );
+            if(hashingAlgorithm == 1)
+                position = hashDivisao(Tag);
+            if(hashingAlgorithm == 2)
+                position = hashDJB2(Tag);
+            
+            return position;
+        }catch(Exception e){
+            throw new Exception("\nError at getPosition(); Current state: Tag: "+Tag+"; Position: "+position+"; Error: "+e);
+        }
     }
-    public int hashDJB2 ( String texto ) {
+
+    public int hashDivisao (K Tag){
+        int soma = 0;
+
+        for ( char c : Tag.toCharArray() ){
+            soma += (int) c;
+        }
+        return soma % this.size;
+    }
+    public int hashDJB2 (K Tag) {
         long hash = 5381;
-        for ( char c : texto.toCharArray()){
+        for ( char c : Tag.toCharArray()){
             hash = (( hash << 5 ) + hash) + c; // hash * 33 + c
         }
 
-        return (int)( hash % Integer.MAX_VALUE );
+        return Math.abs((int)( hash % this.size ));
     }
 
-    //made in class
-    public int getPosition(int value){
-        return value%size;
-    }
-
-    public LinkedList<V> get(K key){
-        int position;
-        LinkedList<V> valuesFound = new LinkedList<V>();
-
-        if(key == null)
+    public LinkedList<V> find(K Tag) throws Exception{
+        if(Tag == null)
             return null;
         
-        position = getPosition(Math.abs( key.hashCode() ));
+        int position = 0;
+        LinkedList<V> blockFound = new LinkedList<V>();
+
+        try {
+            position = getPosition(Tag);
         
-        //Se a posição do hash não tem valores retorna um null
-        if(hashTable[position] == null)
-            return null;
-        else{
-            LinkedList<HashEntry<K, V>> currentList = hashTable[position];
-            for(HashEntry<K, V> currentEntry : currentList){
-                if(key.equals( currentEntry.key )){
-                    valuesFound.add(currentEntry.value);
+            //Returns null if the position is empty
+            if(hashTable[position] == null)
+                return null;
+            else{
+                LinkedList<HashEntry<K, V>> currentBlock = hashTable[position];
+                
+                for(HashEntry<K, V> currentEntry : currentBlock){
+                    if(Tag.equals( currentEntry.Tag )){
+                        blockFound.add(currentEntry.value);
+                    }
                 }
+                return blockFound;
             }
-            return valuesFound; //caso não tenha encontrado a chave na lista
+        } catch (Exception e) {
+            throw new Exception("\nError at find(); Current state: Tag: "+Tag+"; Position: "+position+"; Error: "+e);
         }
     }
 
-    
-    public boolean put(K key, V value){
-        int position;
-        if(key == null)
+    public boolean put(K Tag, V value) throws Exception{
+        int position = 0;
+        if(Tag == null)
             return false;
         
         //checks if there no equal value to the one we are trying to insert
-        LinkedList<V> currentValueForKey = get(key);
-        if(currentValueForKey != null && currentValueForKey.contains(value))
-            return false;
+        //in this system this wont occour cuz the articles are different
+        
+        try {
+            LinkedList<V> currentValueForTag = find(Tag);
 
-        //similar to a codification, the hashCode() method it a java deefautl method
-        //that associates a number to an object, as a way to identify it.
-        //it is used for comparing objects, exemple;
-        //in this case it is useful cuz we dont have to worry if the key is
-        //a string or an integer. it return an interger, positive or negative, thay why abs.
-        //The lisked list librady takes care of the linked list insertion :)
+            if(currentValueForTag != null && currentValueForTag.contains(value))
+                return false;
 
-        position = getPosition(Math.abs( key.hashCode() ));
-    
-        LinkedList<HashEntry<K, V>> currentList = hashTable[position];
-        if(currentList == null)
-            currentList = new LinkedList<HashEntry<K, V>> (); //creates the list
-            
-        currentList.add(new HashEntry<K, V> (key, value)); //inserts the value
-        hashTable[position] = currentList; //inserts the list on the positon
-            
-        return true; //a success inserton!
+            position = getPosition(Tag);
+        
+            LinkedList<HashEntry<K, V>> currentList = hashTable[position];
+            if(currentList == null)
+                currentList = new LinkedList<HashEntry<K, V>> (); //creates the list
+                
+            currentList.add(new HashEntry<K, V> (Tag, value)); //inserts the value
+            hashTable[position] = currentList; //inserts the list on the positon
+                
+            return true; //A success inserton!
+        }catch (ArrayIndexOutOfBoundsException e) {
+            throw new Exception("\nError at put(); Current state: Tag: "+Tag+" Position: "+position+" Error: "+e);
+        }
+
     }
     
     public void printOut(){
@@ -119,9 +123,11 @@ public class HashTable <K, V>{
                 System.out.println("Empty position");
             else{
                 LinkedList<HashEntry<K, V>> currentList = hashTable[i];
-                for(int j = 0; j<currentList.size(); j++){
-                    System.out.println(currentList.get(j).toString() + " - ");
-                }
+                System.out.println(currentList.size() +" Items in this position");//instead of content i just count how many values in the mosition
+                
+                //for(int j = 0; j<currentList.size(); j++){
+                //    System.out.println(currentList.get(j).toString() + " - ");
+                //}
             }
         }
 

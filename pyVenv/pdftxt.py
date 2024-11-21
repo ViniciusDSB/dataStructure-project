@@ -35,4 +35,9 @@ def pdfToTxt(pdf_folder, txts_folder):
 pdf_folder = '../pdfs/'
 txts_folder = '../txts'
 
-pdfToTxt(pdf_folder, txts_folder)
+yn = input("Convert files on " + pdf_folder + "? Y/N")
+if( yn == "Y" or yn == "y"):
+    pdfToTxt(pdf_folder, txts_folder)
+else:
+    newPath = input("Where are the PDFs?")
+    pdfToTxt(newPath, txts_folder)

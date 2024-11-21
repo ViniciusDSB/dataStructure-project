@@ -1,17 +1,24 @@
 package hashes;
 
-public class HashEntry<K, V> {
+public class HashEntry<K, V>{
     
-    K key;
-    V value;
+    public K Tag;
+    public V value;
 
-    public HashEntry(K key, V value){
-        this.key = key;
+    public HashEntry(K Tag, V value){
+        this.Tag = Tag;
         this.value = value;
     }
 
+    public K getTag() {
+        return Tag;
+    }
+    public V getValue() {
+        return value;
+    }
+
     public String toString() {
-		return "(" + key + ", " + value + ")";
+		return "(" + Tag + ", " + value + ")";
 	}
 
 }

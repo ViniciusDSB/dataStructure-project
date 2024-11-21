@@ -20,7 +20,7 @@ Override (python_version) with your python version of course, or run it your way
 you can give a path to a folder with some pdfs that takes the texts from them an produces another folder folder with the texts.
 
 Then you can run
-`javac -d theClasses code/Main.java code/compresses/*.java code/hashes/*.java`
+`javac -d theClasses code/Main.java code/FileData.java code/compresses/*.java code/hashes/*.java code/trie/*.java`
 to compile the java code, it produces a folder 'theClasses' with all the classes; go the that folder running
 `cd theClasses` and then run the code
 `java Main`

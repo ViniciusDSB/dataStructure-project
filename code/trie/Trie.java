@@ -1,11 +1,6 @@
 package trie;
 
-//raw usage exemple;
-//Trie trie = new Trie();        
-//trie.insert("palavra");
-//System.out.println(trie.search("palavra")); // true
-//System.out.println(trie.startsWith("pal")); // true
-//System.out.println(trie.search("pala"));    // false
+import java.util.*;
 
 public class Trie {
     private final TrieNode root;
@@ -14,17 +9,46 @@ public class Trie {
         root = new TrieNode();
     }
 
-    // Método para inserir uma palavra na Trie
-    public void insert(String word) {
+    //metho to take care of long texts
+    //it splits the texts in words and adds the word into the Trie tree and its equivalent with ponctuation if any
+    public void insertText(String text, String documentTitle){
+
+        String[] symbols = {".", ",", "!", "?", ";", "..."};
+        String auxWord = ""; //if the word has any of the symbols we store both versions
+        Boolean symbolFlag;
+        
+        for(String word : text.split(" ")){
+            symbolFlag = false;
+
+            for(String symbol : symbols){
+                if(word.indexOf(symbol) >=0){
+                    auxWord = word.replace(symbol, "");
+                    symbolFlag = true;
+                }
+            }
+        
+            if(!symbolFlag){
+                insertWord(word, documentTitle);
+            }else{
+                insertWord(word, documentTitle);
+                insertWord(auxWord, documentTitle);
+            }
+        }
+    }
+    //Inserts a single word on the Trie tree
+    public void insertWord(String word, String documentTitle) {
         TrieNode node = root;
         for (char ch : word.toCharArray()) {
+
+            //children is a hash map, so we add a key-value pair
+            //where key is the char itself and value is another node
             node.children.putIfAbsent(ch, new TrieNode());
             node = node.children.get(ch);
         }
-        node.isEndOfWord = true;
+        node.endOfWord(true, documentTitle);
     }
 
-    // Método para buscar uma palavra completa na Trie
+    //Returns true if a given word is stored
     public boolean search(String word) {
         TrieNode node = root;
         for (char ch : word.toCharArray()) {
