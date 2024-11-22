@@ -6,48 +6,53 @@ import hashes.*;
 import java.io.*;
 import java.nio.file.*;
 
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Scanner;
 
 public class Main{
     
     public static void main(String[] args){
-
+        System.setProperty("file.encoding", "UTF-8");
         Scanner scan = new Scanner(System.in);
-        
-        //ASKS USER THE PATH FOR A FOLDER WITH TXTs
-        System.out.println("Type the path to the txts directory that contains the articles.");
-        String filepath = scan.nextLine();
-
-        System.out.println("Alright, what ya next movement\n 1 - Only compress with huffman and store on a hash table\n 2 - Just index the words on a Trie structure \n3 - EVERYTHING, LETS GOO");
-        int op = scan.nextInt();
 
         //reads the files, gets and compresses the content, then stores on hash table
         try {
+
+            //ASKS USER THE PATH FOR A FOLDER WITH TXTs
+            System.out.println("Type the path to the txts directory that contains the articles.");
+            String filepath = scan.nextLine();
+
+            System.out.println("Alright, what ya next movement\n 1 - Only compress with huffman and store on a hash table\n 2 - Just index the words on a Trie structure \n3 - EVERYTHING, LETS GOO");
+            int op = scan.nextInt();
+            
             List<FileData> filesData = readFiles(filepath);
 
             if(op == 1){
-                //Asks what hashing should be used
+                
+                //Asks what hash algorithm must be used
                 System.out.println("Which hash algorithm do you want to use? \n 1 - hash by division or 2 - hash DHB2?");
                 int hashAlgo = scan.nextInt();
-
-                HashTable<String, String> myTable = new HashTable<String, String>(30, hashAlgo);
-                huffmanStuff(filesData, myTable);
-                myTable.printOut();
+                int size = 31;
+                
+                huffmanStuff(filesData, scan, size, hashAlgo);
+                //myTable.printOut();
                 
             }else if(op == 2){
-                Trie myTrie = new Trie();
-                trieStuff(filesData, myTrie);
-            }else{
-
-                Trie myTrie = new Trie();
-                trieStuff(filesData, myTrie);
                 
-                //Asks what hashing should be used
+                trieStuff(filesData, scan);
+
+            }else{
+                //Asks what hash algorithm must be used
                 System.out.println("Which hash algorithm do you want to use? \n 1 - hash by division or 2 - hash DHB2?");
                 int hashAlgo = scan.nextInt();
+                int size = 31;
+                
+                huffmanStuff(filesData, scan, size, hashAlgo);
+                //myTable.printOut();
 
-                HashTable<String, String> myTable = new HashTable<String, String>(30, hashAlgo);
-                huffmanStuff(filesData, myTable);
+                trieStuff(filesData, scan);
             }
 
             scan.close();
@@ -56,8 +61,12 @@ public class Main{
         }   
     }
     
-    public static void huffmanStuff(List<FileData> filesData, HashTable<String, String> myTable) throws Exception{
+    public static void huffmanStuff(List<FileData> filesData, Scanner scan, int size, int hashAlgo) throws Exception{
         try {
+
+            HashTable<String, String> myTable = new HashTable<String, String>(size, hashAlgo);
+        
+            //Reads files and store on our hash table
             for(FileData file : filesData){
 
                 String filename = file.getFilename();
@@ -66,7 +75,7 @@ public class Main{
 
                 //storing on hashTable
                 if(myTable.put(filename, compressedFileContent));
-                    System.out.println(" Stored: " + filename + "\n");
+                    System.out.println(" Stored: " + filename);
             }
         } catch (Exception e) {
             System.out.println("PORBLEM AT huffmanStuff(); ERROR: " + e);
@@ -74,9 +83,38 @@ public class Main{
 
     }
 
-    public static void trieStuff(List<FileData> filesData, Trie myTrie){
+    public static void trieStuff(List<FileData> filesData, Scanner scan){
         try {
-            myTrie.insertText("time, it needs time, to win back your love again. Love, it needs love, to bring back your love soma day!", "bazinga");
+            Trie myTrie = new Trie();
+
+            //Indexing word on Trie
+            for(FileData file : filesData){
+                String documentTitle = file.getFilename();
+                String documentContent = file.getContent();
+            
+                myTrie.insertText(documentContent, documentTitle);
+                System.out.println("Successfully inserted document " + documentTitle);
+            }
+
+            //searching for words
+            System.out.println("Type -1 to exit.");
+            System.out.println("Type a word, lets see which documents have it: ");
+            
+            while(true){
+                String toSearch = scan.next();
+    
+                if(toSearch.equals("-1"))
+                    break;
+    
+                    LinkedList res = myTrie.search(toSearch);
+    
+                    if(res != null)
+                        System.out.println(res.toString());
+                    else
+                        System.out.println("Word not found!");
+            } 
+            System.out.println("Ok, bye!");
+    
         } catch (Exception e) {
             System.out.println("PROBLEM AT trieStuff(); ERROR: "+ e);
         }

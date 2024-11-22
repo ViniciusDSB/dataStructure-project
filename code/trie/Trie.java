@@ -1,6 +1,8 @@
 package trie;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 public class Trie {
     private final TrieNode root;
@@ -9,66 +11,49 @@ public class Trie {
         root = new TrieNode();
     }
 
-    //metho to take care of long texts
-    //it splits the texts in words and adds the word into the Trie tree and its equivalent with ponctuation if any
-    public void insertText(String text, String documentTitle){
-
-        String[] symbols = {".", ",", "!", "?", ";", "..."};
-        String auxWord = ""; //if the word has any of the symbols we store both versions
-        Boolean symbolFlag;
+    public void insertText(String text, String docTitle){
+        
+        String[] symbols = {".", ",", "!", "?", "...", ";"};
         
         for(String word : text.split(" ")){
-            symbolFlag = false;
-
-            for(String symbol : symbols){
-                if(word.indexOf(symbol) >=0){
-                    auxWord = word.replace(symbol, "");
-                    symbolFlag = true;
-                }
-            }
-        
-            if(!symbolFlag){
-                insertWord(word, documentTitle);
-            }else{
-                insertWord(word, documentTitle);
-                insertWord(auxWord, documentTitle);
-            }
+            for(String symbol : symbols)
+                if(word.indexOf(symbol) >=0)
+                    word = word.replace(symbol, "");
+                
+            word = word.toLowerCase();
+            insertWord(word, docTitle);
+            
         }
-    }
-    //Inserts a single word on the Trie tree
-    public void insertWord(String word, String documentTitle) {
+
+    } 
+
+    // inserts a word to the Trie tree
+    public void insertWord(String word, String docTitle) {
         TrieNode node = root;
         for (char ch : word.toCharArray()) {
-
-            //children is a hash map, so we add a key-value pair
-            //where key is the char itself and value is another node
             node.children.putIfAbsent(ch, new TrieNode());
             node = node.children.get(ch);
         }
-        node.endOfWord(true, documentTitle);
-    }
+        node.isEndOfWord = true;
+        //block to set the document list on the word end node
+        if(node.docList == null)
+            node.docList = new LinkedList<>();
+        
+        if(! node.docList.contains(docTitle))
+            node.docList.add(docTitle);
 
-    //Returns true if a given word is stored
-    public boolean search(String word) {
+        }
+
+    // Método para buscar uma palavra completa na Trie
+    public LinkedList search(String word) {
         TrieNode node = root;
+        word = word.toLowerCase();
         for (char ch : word.toCharArray()) {
             node = node.children.get(ch);
             if (node == null) {
-                return false;
+                return null;
             }
         }
-        return node.isEndOfWord;
-    }
-
-    // Método para verificar se existe alguma palavra que começa com o prefixo
-    public boolean startsWith(String prefix) {
-        TrieNode node = root;
-        for (char ch : prefix.toCharArray()) {
-            node = node.children.get(ch);
-            if (node == null) {
-                return false;
-            }
-        }
-        return true;
+        return node.docList;
     }
 }

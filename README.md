@@ -3,11 +3,13 @@
 
 <p>
 This is suposed to be a system where we can input a path with a bunch of .txt files<br>
-The system reads the texts and compresses it using a specific hash algorihtm chosen by the user<br>
-Then the user can serach for words and the system must tell witch files contains the words, if any.
+The system reads the texts and compresses it using huffman algorithm and indexes the compressed texts specific hash algorihtm chosen by the user to set the positions<br>
+Then the user can serach for words, indexed in a Trie structure, and the system must tell witch files contains the words, if any.
 </p>
 
 <p>After that we have to make a report with an analysis of the perfomance of the code</p>
+<p>Now we wrote a version of the main class, called Analisys.java, this is a simplified version of the Main with no user output; instead it gets execution time and memory usage and writes into txt files</p>
+<p>The auto.sh file atomates the testing process, so we can set the properties we want and the amount of tests, sit and wait for the script to do the rest while we watch some crap on instagram or anything</p>
 
 # Running the programs:
 First if all make sure you have java an python installed<br>
@@ -25,5 +27,7 @@ to compile the java code, it produces a folder 'theClasses' with all the classes
 `cd theClasses` and then run the code
 `java Main`
 
-Of course if you are using an ide you dont need any of this :)
+<br>to compile the analisys just change "Main" to "Analisys" in the above commands
+
+Of course if you are using an IDE for java you dont need any of this :)
 except the python code if you dont have a bunch of txts alredy
