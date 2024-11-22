@@ -25,6 +25,8 @@ public class Analisys{
             //second is hash algorithm(1 or 2)
             //third is filePath
             //fourth specifies which part to run, huffman only or trie only ( 0 or 1)
+            //fifth argument tells huffman method if it should write the hash table on the txt file or not
+            //  because the distribuition is aways the same, so we do not have to get it everytime
             
             List<FileData> filesData = readFiles(args[2]);
             int op = Integer.parseInt(args[3]);
@@ -33,25 +35,30 @@ public class Analisys{
                 String analisysFile = "../huffmanHashAnalitics.txt";
                 int size = Integer.parseInt(args[0]);
                 int hashAlgo = Integer.parseInt(args[1]);
-                huffmanStuff(filesData, scan, size, hashAlgo, analisysFile);
+                int getHashTable = Integer.parseInt(args[4]);
+
+                huffmanStuff(filesData, scan, size, hashAlgo, analisysFile, getHashTable);
             }
             else{
                 String analisysFile = "../trieAnalitics.txt";
                 trieStuff(filesData, scan, analisysFile);
             }
-                
 
         }catch (Exception e){
             System.out.println("\nPROBLEM ON MAIN FUNCTION: " +  e);
         }   
     }
     
-    public static void huffmanStuff(List<FileData> filesData, Scanner scan, int size, int hashAlgo, String analisysFile) throws Exception{
+    public static void huffmanStuff(List<FileData> filesData, Scanner scan, int size, int hashAlgo, String analisysFile, int getHashTable) throws Exception{
         try {
 
             HashTable<String, String> myTable = new HashTable<String, String>(size, hashAlgo);
-        
+            
+            Runtime runtime = Runtime.getRuntime();
+
             //Reads files and store on our hash table
+            long t0 = System.currentTimeMillis();
+            long t0_freeMem = runtime.freeMemory();
             for(FileData file : filesData){
 
                 String filename = file.getFilename();
@@ -60,6 +67,25 @@ public class Analisys{
 
                 myTable.put(filename, compressedFileContent);
             }
+            long t1 = System.currentTimeMillis();
+            long t1_freeMem = runtime.freeMemory();
+            
+            //writign time and mem to the txt
+            long deltaT = t1-t0;
+            long deltaMem =  t0_freeMem - t1_freeMem;
+
+            String[] data = new String[35];
+            data[0] = ""+deltaT+" ms";
+            writeData(analisysFile, data, "COMPRESSION TIME");
+
+            data[0] = ""+deltaMem+" bytes";
+            writeData(analisysFile, data, "used memory");
+
+            if(getHashTable == 1){
+                data = myTable.getDistribuition();
+                writeData(analisysFile, data, "HASH TABLE DISTRIBUITION");
+            }
+            
             //myTable.printOut();
         } catch (Exception e) {
             System.out.println("PORBLEM AT huffmanStuff(); ERROR: " + e);
@@ -96,33 +122,38 @@ public class Analisys{
             for(FileData file : filesData){
                 myTrie.insertText(file.getContent(), file.getFilename());
             }
+
             long t1 = System.currentTimeMillis();
             long t1_freeMem = runtime.freeMemory();
-            
+
+            //writign time and mem to the txt
             long deltaT = t1-t0;
             String[] data = {""+deltaT+" ms"};
             writeData(analisysFile, data, "INDEXING TIME");
 
             //calc and write memory used
-            long deltaMem = t1_freeMem - t0_freeMem;
+            long deltaMem =  t0_freeMem - t1_freeMem;
             data[0] = ""+deltaMem+" bytes";
             writeData(analisysFile, data, "used memory");
 
             //searching for words
-            
-            while(true){
-                String toSearch = scan.next();
-    
-                if(toSearch.equals("-1"))
-                    break;
-    
-                    LinkedList res = myTrie.search(toSearch);
-    
-                    if(res != null)
-                        System.out.println(res.toString());
-                    else
-                        System.out.println("Word not found!");
+            String[] expressions = new String[100];
+
+            List<FileData> wordsFile = readFiles("../expressions/");
+            for(FileData file : wordsFile){
+                String content = file.getContent();
+                expressions = content.split("\n");
             }
+
+            t0 = System.currentTimeMillis();
+            for( String toSearch : expressions){
+                myTrie.search(toSearch);
+            }
+            
+            t1 = System.currentTimeMillis();
+            deltaT = t1-t0;
+            data[0] = ""+deltaT+" ms";
+            writeData(analisysFile, data, "TOTAL SEARCH TIME TIME");
     
         } catch (Exception e) {
             System.out.println("PROBLEM AT trieStuff(); ERROR: "+ e);
@@ -156,12 +187,13 @@ public class Analisys{
             writer.println(dataLabel);
             
             for(String dataToAppend : data){
-                writer.println(dataToAppend);
+                if(dataToAppend != null)
+                    writer.println(dataToAppend);
             }
 
             writer.close();
         } catch (IOException e) {
-            System.out.println("Error appending text: " + e.getMessage());
+            System.out.println("PROBLEM AT writeData(); ERROR: " + e);
         }
 
     }

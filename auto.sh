@@ -1,14 +1,19 @@
-javac -d theAnalisys code/Analisys.java code/FileData.java code/compresses/*.java code/hashes/*.java code/trie/*.java
 cd theAnalisys/
-java Analisys 31 2 ../txts 1
--1
-java Analisys 31 2 ../txts 1
--1
-java Analisys 31 2 ../txts 1
--1
-java Analisys 31 2 ../txts 1
--1
-java Analisys 31 2 ../txts 1
--1
+echo "Starting Trie Stuff"
 
-echo "finished"
+java Analisys 31 2 ../txts 1
+java Analisys 31 2 ../txts 1
+java Analisys 31 2 ../txts 1
+java Analisys 31 2 ../txts 1
+java Analisys 31 2 ../txts 1
+
+echo "finished trie Stuff"
+echo "Starting Huffman Stuff"
+
+java Analisys 31 1 ../txts 0 1
+java Analisys 31 2 ../txts 0 1
+java Analisys 31 2 ../txts 0 0
+java Analisys 31 2 ../txts 0 0
+java Analisys 31 2 ../txts 0 0
+
+echo "finished HUffman stuff"

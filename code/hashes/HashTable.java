@@ -130,6 +130,36 @@ public class HashTable <K extends String, V>{
                 //}
             }
         }
+    }
+
+    public String[] getDistribuition(){
+
+        String[] data = new String[33];
+        String tmp = "";
+
+        //first position is the hash algorithm used
+        if(hashingAlgorithm == 1)
+            data[0] = "hashDivisao";
+        else
+            data[0] = "hashDJB2";
+
+        //second position is axis information ( position vs amount of txts)
+        data[1] = "pos amount";
+
+        //the other position are  position-quantity pair values
+        for(int i = 0; i<hashTable.length; i++){
+            tmp = (i) + " ";
+            if(hashTable[i] == null)
+                tmp = tmp + "0";
+            else{
+                LinkedList<HashEntry<K, V>> currentList = hashTable[i];
+                tmp = tmp + currentList.size();//instead of content i just count how many values in the mosition
+            }
+
+            data[i+2] = tmp;
+        }
+
+        return data;
 
     }
 }

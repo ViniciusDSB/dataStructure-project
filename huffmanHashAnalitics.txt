@@ -1,0 +1,92 @@
+COMPRESSION TIME
+164952 ms
+used memory
+-280066752 bytes
+HASH TABLE DISTRIBUITION
+hashDivisao
+pos amount
+0 0
+1 0
+2 0
+3 0
+4 0
+5 1
+6 1
+7 1
+8 2
+9 1
+10 4
+11 3
+12 0
+13 0
+14 3
+15 4
+16 2
+17 2
+18 1
+19 3
+20 1
+21 0
+22 0
+23 0
+24 1
+25 0
+26 1
+27 0
+28 0
+29 0
+30 0
+
+COMPRESSION TIME
+165418 ms
+used memory
+-233642608 bytes
+HASH TABLE DISTRIBUITION
+hashDJB2
+pos amount
+0 1
+1 3
+2 1
+3 1
+4 0
+5 1
+6 0
+7 0
+8 2
+9 2
+10 2
+11 3
+12 1
+13 0
+14 1
+15 0
+16 0
+17 1
+18 0
+19 1
+20 0
+21 1
+22 1
+23 4
+24 0
+25 1
+26 2
+27 0
+28 1
+29 1
+30 0
+
+COMPRESSION TIME
+165211 ms
+used memory
+-176057656 bytes
+
+COMPRESSION TIME
+166508 ms
+used memory
+-200343640 bytes
+
+COMPRESSION TIME
+166804 ms
+used memory
+-313417928 bytes
