@@ -22,7 +22,7 @@ public class Analisys{
             Scanner scan = new Scanner(System.in);
             
             //Args: first position is the hash table size
-            //second is hash algorithm(1 or 2)
+            //second is hash algorithm(1 or 2 -> division or djb2)
             //third is filePath
             //fourth specifies which part to run, huffman only or trie only ( 0 or 1)
             //fifth argument tells huffman method if it should write the hash table on the txt file or not
@@ -74,7 +74,7 @@ public class Analisys{
             long deltaT = t1-t0;
             long deltaMem =  t0_freeMem - t1_freeMem;
 
-            String[] data = new String[35];
+            String[] data = new String[40];
             data[0] = ""+deltaT+" ms";
             writeData(analisysFile, data, "COMPRESSION TIME");
 

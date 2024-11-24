@@ -12,7 +12,7 @@ Then the user can serach for words, indexed in a Trie structure, and the system 
 <p>The auto.sh file atomates the testing process, so we can set the properties we want and the amount of tests, sit and wait for the script to do the rest while we watch some crap on instagram or anything</p>
 
 # Running the programs:
-First if all make sure you have java an python installed<br>
+First of all make sure you have java an python installed<br>
 If you have that you can start extracting the text from pdfs with Py Mu Pdf, if you dont have it just run
 `pip install pymupdf`
 By running

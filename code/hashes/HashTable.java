@@ -134,7 +134,7 @@ public class HashTable <K extends String, V>{
 
     public String[] getDistribuition(){
 
-        String[] data = new String[33];
+        String[] data = new String[40];
         String tmp = "";
 
         //first position is the hash algorithm used
